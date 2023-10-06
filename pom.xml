@@ -20,7 +20,8 @@
         <module>delivery-service</module>
 		<module>order-service</module>
         <module>kitchen-service</module>
-    </modules>
+		<module>notification-service</module>
+	</modules>
 
     <properties>
 		<java.version>11</java.version>
