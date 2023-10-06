@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   rabbitmq:
-    image: rabbitmq:3.9.8-management-alpine
+    image: rabbitmq:3.9-management-alpine
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -11,6 +11,16 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: liga
       RABBITMQ_DEFAULT_PASS: liga
+
+  liga-db:
+    image: postgres:14-alpine
+    container_name: liga-db
+    ports:
+      - "6541:5432"
+    environment:
+      - POSTGRES_DB=liga
+      - POSTGRES_USER=liga
+      - POSTGRES_PASSWORD=liga
 
 volumes:
   rabbitmq_data:
