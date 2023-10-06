@@ -19,7 +19,8 @@
     <modules>
         <module>delivery-service</module>
 		<module>order-service</module>
-	</modules>
+        <module>kitchen-service</module>
+    </modules>
 
     <properties>
 		<java.version>11</java.version>
