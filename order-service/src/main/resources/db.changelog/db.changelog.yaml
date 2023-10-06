@@ -1,0 +1,6 @@
+databaseChangeLog:
+  - changeSet:
+      id: '2023100601'
+      author: 'MariaT'
+      changes:
+        -
