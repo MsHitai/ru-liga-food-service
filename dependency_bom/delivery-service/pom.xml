@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>ru.liga</groupId>
-        <artifactId>food-service</artifactId>
+        <artifactId>dependency_bom</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
