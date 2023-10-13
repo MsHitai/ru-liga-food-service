@@ -18,6 +18,10 @@
 
 	<modules>
 		<module>dependency_bom</module>
+		<module>delivery-service</module>
+		<module>order-service</module>
+		<module>kitchen-service</module>
+		<module>notification-service</module>
 	</modules>
 
 </project>
