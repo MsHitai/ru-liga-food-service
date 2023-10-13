@@ -1,9 +1,7 @@
 package ru.liga.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import ru.liga.dto.NewOrderDto;
 import ru.liga.dto.OrderDto;
@@ -17,24 +15,19 @@ import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @Slf4j
 public class OrderController {
 
     private final OrderService orderService;
 
-    @Autowired
-    public OrderController(OrderService orderService) {
-        this.orderService = orderService;
-    }
-
     @GetMapping("/orders")
-    public List<OrderDto> findAllOrders(@PositiveOrZero @RequestParam(defaultValue = "0") Integer pageIndex,
-                                        @Positive @RequestParam(defaultValue = "10") Integer pageCount,
+    public List<OrderDto> findAllOrders(@PositiveOrZero @RequestParam Integer pageIndex,
+                                        @Positive @RequestParam Integer pageCount,
                                         @RequestParam(name = "status", required = false) Status status) {
         log.info("Received GET request to find all orders from page index {} to page count {} with status {}",
                 pageIndex, pageCount, status);
-        Pageable page = PageRequest.of(pageIndex / pageCount, pageCount);
-        return orderService.findAllOrders(page, status);
+        return orderService.findAllOrders(pageIndex, pageCount, status);
     }
 
     @GetMapping("/order/{orderId}")

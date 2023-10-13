@@ -1,5 +1,6 @@
 package ru.liga.service.impl;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.liga.dto.NewOrderDto;
@@ -15,7 +16,8 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
-    public List<OrderDto> findAllOrders(Pageable page, Status status) {
+    public List<OrderDto> findAllOrders(Integer pageIndex, Integer pageCount, Status status) {
+        Pageable page = PageRequest.of(pageIndex / pageCount, pageCount);
         return null;
     }
 

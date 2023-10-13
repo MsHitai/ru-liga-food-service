@@ -7,8 +7,9 @@ import ru.liga.model.Status;
 import java.util.List;
 
 public interface DeliveryService {
-    List<DeliveryDto> findAllDeliveries(Status status);
 
-    void addDelivery(Long deliveryId, OrderActionDto dto);
 
+    void addDelivery(OrderActionDto dto);
+
+    List<DeliveryDto> findAllDeliveries(Status status, Integer pageIndex, Integer pageCount);
 }

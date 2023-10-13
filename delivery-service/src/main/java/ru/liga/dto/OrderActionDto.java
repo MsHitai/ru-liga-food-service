@@ -8,5 +8,7 @@ import javax.validation.constraints.NotNull;
 @Data
 public class OrderActionDto {
     @NotNull
+    private Long id;
+    @NotNull
     private Status status;
 }

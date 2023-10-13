@@ -1,6 +1,5 @@
 package ru.liga.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.util.List;
@@ -9,6 +8,5 @@ import java.util.List;
 public class OrderShortDto {
 
     private Long id;
-    @JsonProperty(namespace = "menu_items")
     private List<MenuItem> menuItems;
 }
