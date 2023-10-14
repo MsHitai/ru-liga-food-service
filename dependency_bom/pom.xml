@@ -18,11 +18,11 @@
         <java.version>11</java.version>
         <spring.version>2.7.16</spring.version>
         <mybatis.version>3.0.2</mybatis.version>
-        <shakeyaml.version>2.0</shakeyaml.version>
+        <shakeyaml.version>2.2</shakeyaml.version>
         <h2.version>2.2.224</h2.version>
         <lombok.version>1.18.24</lombok.version>
         <postgresql.version>42.3.8</postgresql.version>
-        <liquibase.version>4.20.0</liquibase.version>
+        <liquibase-core.version>4.20.0</liquibase-core.version>
         <security.test>6.1.4</security.test>
         <rabbit.test>2.4.16</rabbit.test>
         <boot.test>2.7.16</boot.test>
@@ -78,7 +78,7 @@
             <dependency>
                 <groupId>org.liquibase</groupId>
                 <artifactId>liquibase-core</artifactId>
-                <version>${liquibase.version}</version>
+                <version>${liquibase-core.version}</version>
             </dependency>
 
             <dependency>
@@ -139,20 +139,19 @@
     </dependencyManagement>
 
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-        </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven.compiler.plugin}</version>
+                    <configuration>
+                        <source>${maven.compiler.source}</source>
+                        <target>${maven.compiler.target}</target>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 
 </project>
