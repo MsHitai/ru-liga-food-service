@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    <!-- локальный ченджлог  -->
+    <changeSet id="2023-10-14 11:00:00" author="trushanina">
+        <!-- relativeToChangelogFile - позволяет указывать путь относительно той папки, где лежит ченджлог  -->
+        <sqlFile path="v02/insert-couriers-db.sql" relativeToChangelogFile="true"/>
+        <rollback>
+            <sqlFile path="v02/rollback/insert-couriers_rollback.sql" relativeToChangelogFile="true"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="2023-10-14 12:00:00" author="trushanina">
+        <!-- relativeToChangelogFile - позволяет указывать путь относительно той папки, где лежит ченджлог  -->
+        <sqlFile path="v02/insert-customers-db.sql" relativeToChangelogFile="true"/>
+        <rollback>
+            <sqlFile path="v02/rollback/insert-customers_rollback.sql" relativeToChangelogFile="true"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="2023-10-14 13:00:00" author="trushanina">
+        <!-- relativeToChangelogFile - позволяет указывать путь относительно той папки, где лежит ченджлог  -->
+        <sqlFile path="v02/insert-restaurants-db.sql" relativeToChangelogFile="true"/>
+        <rollback>
+            <sqlFile path="v02/rollback/insert-restaurants_rollback.sql" relativeToChangelogFile="true"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="2023-10-14 14:00:00" author="trushanina">
+        <!-- relativeToChangelogFile - позволяет указывать путь относительно той папки, где лежит ченджлог  -->
+        <sqlFile path="v02/insert-restaurant-menu-items-db.sql" relativeToChangelogFile="true"/>
+        <rollback>
+            <sqlFile path="v02/rollback/insert-restaurant-menu-items_rollback.sql" relativeToChangelogFile="true"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="2023-10-14 15:00:00" author="trushanina">
+        <!-- relativeToChangelogFile - позволяет указывать путь относительно той папки, где лежит ченджлог  -->
+        <sqlFile path="v02/insert-orders-db.sql" relativeToChangelogFile="true"/>
+        <rollback>
+            <sqlFile path="v02/rollback/insert-orders_rollback.sql" relativeToChangelogFile="true"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="2023-10-14 16:00:00" author="trushanina">
+        <!-- relativeToChangelogFile - позволяет указывать путь относительно той папки, где лежит ченджлог  -->
+        <sqlFile path="v02/insert-order-items-db.sql" relativeToChangelogFile="true"/>
+        <rollback>
+            <sqlFile path="v02/rollback/insert-order-items_rollback.sql" relativeToChangelogFile="true"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="2023-10-14 17:00:00" author="trushanina">
+        <!-- relativeToChangelogFile - позволяет указывать путь относительно той папки, где лежит ченджлог  -->
+        <sqlFile path="v02/alter-couriers-add-unique-phone.sql" relativeToChangelogFile="true"/>
+        <rollback>
+            <sqlFile path="v02/rollback/alter-couriers-add-unique-phone_rollback.sql" relativeToChangelogFile="true"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="2023-10-14 18:00:00" author="trushanina">
+        <!-- relativeToChangelogFile - позволяет указывать путь относительно той папки, где лежит ченджлог  -->
+        <sqlFile path="v02/alter-customers-add-unique-phone.sql" relativeToChangelogFile="true"/>
+        <rollback>
+            <sqlFile path="v02/rollback/alter-customers-add-unique-phone_rollback.sql" relativeToChangelogFile="true"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>
