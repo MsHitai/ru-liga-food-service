@@ -5,7 +5,7 @@ create table if not exists customers
     id      bigint not null default nextval('customers_seq'),
     phone   varchar(80),
     email   varchar(512),
-    address varchar(1000),
+    address text,
     constraint customers_pk primary key (id)
 );
 
