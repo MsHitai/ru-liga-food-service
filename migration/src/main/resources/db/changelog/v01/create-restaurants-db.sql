@@ -3,7 +3,7 @@ create sequence if not exists restaurants_seq;
 create table if not exists restaurants
 (
     id      bigint not null default nextval('restaurants_seq'),
-    address varchar(1000),
+    address text,
     status  varchar(80),
     constraint restaurants_pk primary key (id)
 );
