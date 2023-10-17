@@ -1,12 +1,9 @@
 package ru.liga.model;
 
-
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.proxy.HibernateProxy;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter
@@ -15,37 +12,28 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "orders")
-public class Order {
-
+@Table(name = "customers")
+public class Customer {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "orders_seq")
-    @SequenceGenerator(name = "orders_seq", sequenceName = "orders_seq", allocationSize = 1)
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "customers_seq")
+    @SequenceGenerator(name = "customers_seq", sequenceName = "customers_seq", allocationSize = 1)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id")
-    @ToString.Exclude
-    private Customer customer;
+    @Column(name = "phone", unique = true)
+    private String phone;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id")
-    @ToString.Exclude
-    private Restaurant restaurant;
+    @Column(name = "email")
+    private String email;
 
-    @Column(name = "status")
-    @Enumerated(EnumType.STRING)
-    private OrderStatus status;
+    @Lob
+    @Column(columnDefinition = "TEXT", name = "address")
+    private String address;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "courier_id")
+    @Transient
     @ToString.Exclude
-    private Courier courier;
-
-    @Column(name = "time_stamp", nullable = false)
-    @CreationTimestamp
-    private LocalDateTime timestamp;
+    private Order order;
 
     @Override
     public final boolean equals(Object o) {
@@ -56,8 +44,8 @@ public class Order {
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ?
                 ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        Order order = (Order) o;
-        return getId() != null && Objects.equals(getId(), order.getId());
+        Customer customer = (Customer) o;
+        return getId() != null && Objects.equals(getId(), customer.getId());
     }
 
     @Override

@@ -1,12 +1,10 @@
 package ru.liga.model;
 
-
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.proxy.HibernateProxy;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
 import java.util.Objects;
 
 @Getter
@@ -15,37 +13,34 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "orders")
-public class Order {
+@Table(name = "restaurant_menu_items")
+public class RestaurantMenuItem {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "orders_seq")
-    @SequenceGenerator(name = "orders_seq", sequenceName = "orders_seq", allocationSize = 1)
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "res_menu_items_seq")
+    @SequenceGenerator(name = "res_menu_items_seq", sequenceName = "res_menu_items_seq", allocationSize = 1)
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id")
-    @ToString.Exclude
-    private Customer customer;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")
     @ToString.Exclude
     private Restaurant restaurant;
 
-    @Column(name = "status")
-    @Enumerated(EnumType.STRING)
-    private OrderStatus status;
+    @Column(name = "name", nullable = false)
+    private String name;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "courier_id")
-    @ToString.Exclude
-    private Courier courier;
+    @Column(name = "price", nullable = false, columnDefinition = "decimal(10,2)")
+    private BigDecimal price;
 
-    @Column(name = "time_stamp", nullable = false)
-    @CreationTimestamp
-    private LocalDateTime timestamp;
+    @Column(columnDefinition = "bytea")
+    private Byte[] image;
+
+    @Column(columnDefinition = "TEXT", name = "description")
+    private String description;
+
+    @OneToOne(mappedBy = "menuItem")
+    private OrderItem orderItem;
 
     @Override
     public final boolean equals(Object o) {
@@ -56,8 +51,8 @@ public class Order {
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ?
                 ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        Order order = (Order) o;
-        return getId() != null && Objects.equals(getId(), order.getId());
+        RestaurantMenuItem that = (RestaurantMenuItem) o;
+        return getId() != null && Objects.equals(getId(), that.getId());
     }
 
     @Override

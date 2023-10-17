@@ -17,7 +17,7 @@
     <properties>
         <java.version>11</java.version>
         <spring.version>2.7.16</spring.version>
-        <mybatis.version>3.0.2</mybatis.version>
+        <mybatis.version>3.5.13</mybatis.version>
         <shakeyaml.version>2.2</shakeyaml.version>
         <h2.version>2.2.224</h2.version>
         <lombok.version>1.18.24</lombok.version>

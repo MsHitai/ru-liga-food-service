@@ -14,5 +14,5 @@ public class ItemDto {
     private double price;
     private int quantity;
     private String description;
-    private byte[] image;
+    private Byte[] image;
 }

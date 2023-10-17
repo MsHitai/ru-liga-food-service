@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.liga.dto.NewOrderDto;
 import ru.liga.dto.OrderDto;
 import ru.liga.dto.OrderToDeliverDto;
-import ru.liga.model.Status;
+import ru.liga.model.OrderStatus;
 import ru.liga.service.OrderService;
 
 import javax.validation.Valid;
@@ -24,7 +24,7 @@ public class OrderController {
     @GetMapping("/orders")
     public List<OrderDto> findAllOrders(@PositiveOrZero @RequestParam Integer pageIndex,
                                         @Positive @RequestParam Integer pageCount,
-                                        @RequestParam(name = "status", required = false) Status status) {
+                                        @RequestParam(name = "status", required = false) OrderStatus status) {
         log.info("Received GET request to find all orders from page index {} to page count {} with status {}",
                 pageIndex, pageCount, status);
         return orderService.findAllOrders(pageIndex, pageCount, status);
