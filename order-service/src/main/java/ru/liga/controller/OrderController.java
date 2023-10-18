@@ -37,8 +37,9 @@ public class OrderController {
     }
 
     @PostMapping("/order")
-    public OrderToDeliverDto addOrder(@Valid @RequestBody NewOrderDto dto) {
-        log.info("Received POST request to add an order {}", dto.toString());
-        return orderService.addOrder(dto);
+    public OrderToDeliverDto addOrder(@Valid @RequestBody NewOrderDto dto,
+                                      @RequestParam(name = "customerId") Long customerId) {
+        log.info("Received POST request to add an order {} from customer by id {}", dto.toString(), customerId);
+        return orderService.addOrder(dto, customerId);
     }
 }

@@ -26,7 +26,6 @@ public class Customer {
     @Column(name = "email")
     private String email;
 
-    @Lob
     @Column(columnDefinition = "TEXT", name = "address")
     private String address;
 

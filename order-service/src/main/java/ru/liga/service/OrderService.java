@@ -13,5 +13,5 @@ public interface OrderService {
 
     OrderDto findOrderById(Long orderId);
 
-    OrderToDeliverDto addOrder(NewOrderDto dto);
+    OrderToDeliverDto addOrder(NewOrderDto dto, Long customerId);
 }
