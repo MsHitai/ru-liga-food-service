@@ -133,6 +133,54 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Получить все deliveries",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
+							"    pm.response.to.be.ok;    \r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/deliveries?status=DELIVERY_DELIVERING",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"deliveries"
+					],
+					"query": [
+						{
+							"key": "status",
+							"value": "DELIVERY_DELIVERING"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Добавить доставку/поменять статус",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
 		}
 	]
 }

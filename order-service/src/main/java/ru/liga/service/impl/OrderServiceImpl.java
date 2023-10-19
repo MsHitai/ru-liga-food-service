@@ -67,11 +67,11 @@ public class OrderServiceImpl implements OrderService {
         Customer customer = customerRepository.findById(customerId).orElseThrow(() ->
                 new DataNotFoundException(String.format("Customer by id=%d is not in the database", customerId)));
         Restaurant restaurant = restaurantRepository.findById(dto.getRestaurantId()).orElseThrow(() ->
-                new DataNotFoundException(String.format("Customer by id=%d is not in the database",
+                new DataNotFoundException(String.format("Restaurant by id=%d is not in the database",
                         dto.getRestaurantId())));
         order.setCustomer(customer);
         order.setRestaurant(restaurant);
-        order.setStatus(OrderStatus.PENDING);
+        order.setStatus(OrderStatus.CUSTOMER_CREATED);
         //собираем количество блюд по идентификатору блюда
         Map<Long, Integer> itemsQuantity = dto.getMenuItems().stream()
                 .collect(Collectors.toMap(MenuItem::getMenuItemId, MenuItem::getQuantity));

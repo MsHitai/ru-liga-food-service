@@ -1,7 +1,7 @@
 package ru.liga.dto;
 
 import lombok.Data;
-import ru.liga.model.Status;
+import ru.liga.model.OrderStatus;
 
 import javax.validation.constraints.NotNull;
 
@@ -10,5 +10,5 @@ public class OrderActionDto {
     @NotNull
     private Long id;
     @NotNull
-    private Status status;
+    private OrderStatus status;
 }

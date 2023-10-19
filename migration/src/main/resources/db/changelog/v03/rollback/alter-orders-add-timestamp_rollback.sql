@@ -1,1 +1,2 @@
-alter table orders drop column time_stamp;
+alter table orders
+    drop column time_stamp;

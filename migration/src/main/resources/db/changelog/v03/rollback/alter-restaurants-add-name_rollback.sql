@@ -1,1 +1,2 @@
-alter table restaurants drop column name;
+alter table restaurants
+    drop column name;

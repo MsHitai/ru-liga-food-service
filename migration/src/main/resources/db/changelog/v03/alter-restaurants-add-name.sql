@@ -1,1 +1,2 @@
-alter table restaurants add column name varchar(255);
+alter table restaurants
+    add column name varchar(255);
