@@ -3,22 +3,13 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ru.liga.batisMapper.OrderMapper">
-    <select
-            id="getOrderByStatus"
-            parameterType="java.lang.String"
-            resultMap="order">  <!--выбираем resultMap, чтоб опреелить как мапить поля результата на сущность MyBatis-->
+    <select id="getOrderByStatus" resultType="Order">
         select o.* from orders as o
         left join restaurants r on o.restaurant_id = r.id
         left join customers c on o.customer_id = c.id
         left join couriers co on o.courier_id = co.id
-        where (1=1)
-        limit 2
-        <if test="status != null">
-            and status = #{status}
-        </if>
-        <if test="page != null">
-            #{page}
-        </if>
+        where o.status = #{status}
+        limit #{page}
     </select>
 
     <update id="updateOrderStatus" parameterType="ru.liga.entities.Order">

@@ -5,6 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.liga.batisMapper.OrderMapper;
 import ru.liga.dto.CustomerDto;
 import ru.liga.dto.DeliveryDto;
 import ru.liga.dto.OrderActionDto;
@@ -27,18 +28,19 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class DeliveryServiceImpl implements DeliveryService {
 
+    private final OrderMapper orderMapper;
     private final OrderRepository orderRepository;
 
     @Override
     public void addDelivery(OrderActionDto dto) {
         checkOrderId(dto.getId());
-        orderRepository.updateOrderStatus(dto.getStatus(), dto.getId());
+        orderMapper.updateOrderStatus(dto.getStatus(), dto.getId());
     }
 
     @Override
     public List<DeliveryDto> findAllDeliveries(OrderStatus status, Integer pageIndex, Integer pageCount) {
         Pageable page = PageRequest.of(pageIndex / pageCount, pageCount);
-        List<Order> orders = orderRepository.findAllByStatus(status, page);
+        List<Order> orders = orderMapper.getOrderByStatus(status, page);
         // собираем рестораны, клиентов и курьеров из заказов по идентификатору заказа
         Map<Long, Restaurant> restaurants = orders.stream()
                 .collect(Collectors.toMap(Order::getId, Order::getRestaurant));
