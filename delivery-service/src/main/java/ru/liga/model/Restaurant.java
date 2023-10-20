@@ -2,6 +2,7 @@ package ru.liga.model;
 
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
+import ru.liga.model.enums.RestaurantStatus;
 
 import javax.persistence.*;
 import java.util.List;

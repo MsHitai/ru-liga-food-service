@@ -1,7 +1,7 @@
 package ru.liga.dto;
 
 import lombok.Data;
-import ru.liga.model.OrderStatus;
+import ru.liga.model.enums.OrderStatus;
 
 import javax.validation.constraints.NotNull;
 

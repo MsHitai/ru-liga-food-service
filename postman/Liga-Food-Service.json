@@ -71,14 +71,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8082/order/3",
+					"raw": "http://localhost:8082/orders/3",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8082",
 					"path": [
-						"order",
+						"orders",
 						"3"
 					]
 				}
@@ -107,7 +107,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"restaurantId\":2,\r\n    \"menuItems\":[\r\n        {\r\n            \"quantity\":2,\r\n            \"menuItemId\":1\r\n        } ,\r\n        {\r\n            \"quantity\":1,\r\n            \"menuItemId\":2\r\n        }\r\n    ]\r\n}",
+					"raw": "{\r\n    \"restaurantId\":3,\r\n    \"menuItems\":[\r\n        {\r\n            \"quantity\":2,\r\n            \"menuItemId\":2\r\n        } ,\r\n        {\r\n            \"quantity\":1,\r\n            \"menuItemId\":1\r\n        }\r\n    ]\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -115,19 +115,19 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8082/order?customerId=3",
+					"raw": "http://localhost:8082/orders?customerId=2",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8082",
 					"path": [
-						"order"
+						"orders"
 					],
 					"query": [
 						{
 							"key": "customerId",
-							"value": "3"
+							"value": "2"
 						}
 					]
 				}
@@ -168,6 +168,16 @@
 						{
 							"key": "status",
 							"value": "DELIVERY_DELIVERING"
+						},
+						{
+							"key": "pageIndex",
+							"value": "0",
+							"disabled": true
+						},
+						{
+							"key": "pageCount",
+							"value": "2",
+							"disabled": true
 						}
 					]
 				}
@@ -194,7 +204,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"id\":\"4\",\r\n    \"status\":\"CUSTOMER_PAID\"\r\n}",
+					"raw": "{\r\n    \"id\":\"4\",\r\n    \"status\":\"KITCHEN_PREPARING\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -202,14 +212,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8081/delivery",
+					"raw": "http://localhost:8081/deliveries",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8081",
 					"path": [
-						"delivery"
+						"deliveries"
 					]
 				}
 			},

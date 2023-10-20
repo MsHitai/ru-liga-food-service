@@ -29,8 +29,7 @@ public class Customer {
     @Column(columnDefinition = "TEXT", name = "address")
     private String address;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @Transient
+    @OneToOne(mappedBy = "customer")
     @ToString.Exclude
     private Order order;
 

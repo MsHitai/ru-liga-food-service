@@ -22,12 +22,12 @@ public class OrderItem {
     @SequenceGenerator(name = "orders_items_seq", sequenceName = "orders_items_seq", allocationSize = 1)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "order_id")
     @ToString.Exclude
     private Order order;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "restaurant_menu_item")
     @ToString.Exclude
     private RestaurantMenuItem menuItem;

@@ -4,6 +4,7 @@ package ru.liga.model;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.proxy.HibernateProxy;
+import ru.liga.model.enums.OrderStatus;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

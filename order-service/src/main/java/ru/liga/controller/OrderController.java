@@ -16,12 +16,13 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/orders")
 @Slf4j
 public class OrderController {
 
     private final OrderService orderService;
 
-    @GetMapping("/orders")
+    @GetMapping
     public List<OrderDto> findAllOrders(@PositiveOrZero @RequestParam Integer pageIndex,
                                         @Positive @RequestParam Integer pageCount,
                                         @RequestParam(name = "status", required = false) OrderStatus status) {
@@ -30,13 +31,13 @@ public class OrderController {
         return orderService.findAllOrders(pageIndex, pageCount, status);
     }
 
-    @GetMapping("/order/{orderId}")
+    @GetMapping("/{orderId}")
     public OrderDto findOrderById(@PathVariable(name = "orderId") Long orderId) {
         log.info("Received GET request to find order by id {}", orderId);
         return orderService.findOrderById(orderId);
     }
 
-    @PostMapping("/order")
+    @PostMapping
     public OrderToDeliverDto addOrder(@Valid @RequestBody NewOrderDto dto,
                                       @RequestParam(name = "customerId") Long customerId) {
         log.info("Received POST request to add an order {} from customer by id {}", dto.toString(), customerId);

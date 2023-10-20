@@ -89,7 +89,6 @@ public class OrderServiceImpl implements OrderService {
             orderItems.add(item);
         }
 
-        orderRepository.save(order);
         orderItemRepository.saveAll(orderItems);
 
         OrderToDeliverDto result = new OrderToDeliverDto();

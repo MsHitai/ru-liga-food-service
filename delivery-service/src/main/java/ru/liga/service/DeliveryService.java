@@ -2,7 +2,7 @@ package ru.liga.service;
 
 import ru.liga.dto.DeliveryDto;
 import ru.liga.dto.OrderActionDto;
-import ru.liga.model.OrderStatus;
+import ru.liga.model.enums.OrderStatus;
 
 import java.util.List;
 

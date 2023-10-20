@@ -13,7 +13,11 @@ import ru.liga.dto.RestaurantDto;
 import ru.liga.exception.DataNotFoundException;
 import ru.liga.mapper.CustomerMapper;
 import ru.liga.mapper.RestaurantMapper;
-import ru.liga.model.*;
+import ru.liga.model.Courier;
+import ru.liga.model.Customer;
+import ru.liga.model.Order;
+import ru.liga.model.Restaurant;
+import ru.liga.model.enums.OrderStatus;
 import ru.liga.repository.OrderRepository;
 import ru.liga.service.DeliveryService;
 import ru.liga.util.DistanceCalculator;
@@ -40,7 +44,7 @@ public class DeliveryServiceImpl implements DeliveryService {
     @Override
     public List<DeliveryDto> findAllDeliveries(OrderStatus status, Integer pageIndex, Integer pageCount) {
         Pageable page = PageRequest.of(pageIndex / pageCount, pageCount);
-        List<Order> orders = orderMapper.getOrderByStatus(status, page);
+        List<Order> orders = orderMapper.getOrderByStatus(status, page.getPageSize());
         // собираем рестораны, клиентов и курьеров из заказов по идентификатору заказа
         Map<Long, Restaurant> restaurants = orders.stream()
                 .collect(Collectors.toMap(Order::getId, Order::getRestaurant));

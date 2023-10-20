@@ -39,9 +39,6 @@ public class RestaurantMenuItem {
     @Column(columnDefinition = "TEXT", name = "description")
     private String description;
 
-    @OneToOne(mappedBy = "menuItem")
-    private OrderItem orderItem;
-
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;

@@ -33,13 +33,13 @@
         </dependency>
 
         <dependency>
-            <groupId>org.mybatis</groupId>
-            <artifactId>mybatis</artifactId>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
         </dependency>
-
+        <!-- подключаем mybatis, чтобы убрать уязвимость из транзитивных зависимостей выше -->
         <dependency>
             <groupId>org.mybatis</groupId>
-            <artifactId>mybatis-spring</artifactId>
+            <artifactId>mybatis</artifactId>
         </dependency>
 
         <dependency>
