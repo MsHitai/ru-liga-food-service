@@ -31,7 +31,7 @@ public class DeliveryController {
     }
 
     @PostMapping
-    public void addDelivery(@Valid @RequestBody OrderActionDto dto) {
+    public void updateOrderStatus(@Valid @RequestBody OrderActionDto dto) {
         log.info("Received POST request to add delivery by id {} with action {}", dto.getId(), dto.getStatus());
         deliveryService.addDelivery(dto);
     }

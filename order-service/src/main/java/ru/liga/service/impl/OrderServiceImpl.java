@@ -11,6 +11,7 @@ import ru.liga.mapper.MenuItemMapper;
 import ru.liga.mapper.OrderMapper;
 import ru.liga.mapper.RestaurantMapper;
 import ru.liga.model.*;
+import ru.liga.model.enums.OrderStatus;
 import ru.liga.repository.*;
 import ru.liga.service.OrderService;
 
