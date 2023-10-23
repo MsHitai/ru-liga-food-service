@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.liga.exception.DataConflictException;
 import ru.liga.exception.DataNotFoundException;
+import ru.liga.exception.DeliveryException;
 import ru.liga.exception.ValidationException;
 
 import java.time.LocalDateTime;
@@ -25,6 +26,13 @@ public class ErrorHandler {
     public ApiError handleValidationException(final ValidationException e) {
         log.info("400 {}", e.getMessage(), e);
         return new ApiError("BAD_REQUEST", "Incorrectly made request", e.getMessage(), LocalDateTime.now());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiError handleDeliveryException(final DeliveryException e) {
+        log.info("400 {}", e.getMessage(), e);
+        return new ApiError("BAD_REQUEST", "Problem with delivery", e.getMessage(), LocalDateTime.now());
     }
 
     @ExceptionHandler

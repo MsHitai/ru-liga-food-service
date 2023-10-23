@@ -32,7 +32,7 @@ public class DeliveryController {
 
     @PostMapping
     public void updateOrderStatus(@Valid @RequestBody OrderActionDto dto) {
-        log.info("Received POST request to add delivery by id {} with action {}", dto.getId(), dto.getStatus());
+        log.info("Received POST request to update order by id {} with action {}", dto.getId(), dto.getStatus());
         deliveryService.addDelivery(dto);
     }
 }

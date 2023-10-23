@@ -39,6 +39,7 @@ public class DeliveryServiceImpl implements DeliveryService {
     public void addDelivery(OrderActionDto dto) {
         checkOrderId(dto.getId());
         orderMapper.updateOrderStatus(dto.getStatus(), dto.getId());
+        //todo add logic for Kitchen_Denied to return the money to the client
     }
 
     @Override
