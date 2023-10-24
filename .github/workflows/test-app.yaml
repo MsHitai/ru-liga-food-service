@@ -28,17 +28,6 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Liquibase Update
-        uses: liquibase-github-actions/update@v4.24.0
-        with:
-          changelogFile: migration/src/main/resources/db/master.xml
-          url: jdbc:postgresql://localhost:5432/liga
-          driver: org.postgresql.Driver
-          password: liga
-          username: liga
-        env:
-          JAVA_HOME: /home/runner/.m2/toolchains.xml
-
       - name: Install Node
         uses: actions/setup-node@v1
         with:
