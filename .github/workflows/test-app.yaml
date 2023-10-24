@@ -28,12 +28,6 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Liquibase Update
-        uses: liquibase-github-actions/update@v4.24.0
-        with:
-          changelogFile: ""
-          url: ""
-
       - name: Check and Build application
         run: |
           cp -rf ./tests/checkstyle.xml ./checkstyle.xml
