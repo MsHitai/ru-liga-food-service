@@ -23,5 +23,53 @@ services:
       - POSTGRES_USER=liga
       - POSTGRES_PASSWORD=liga
 
+  delivery-service:
+    build: delivery-service
+    ports:
+      - "8081:8081"
+    depends_on:
+      - liga-db
+      - rabbitmq
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://liga-db:5432/liga
+      - SPRING_DATASOURCE_USER=liga
+      - SPRING_DATASOURCE_PASSWORD=liga
+
+  kitchen-service:
+    build: kitchen-service
+    ports:
+      - "8083:8083"
+    depends_on:
+      - liga-db
+      - rabbitmq
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://liga-db:5432/liga
+      - SPRING_DATASOURCE_USER=liga
+      - SPRING_DATASOURCE_PASSWORD=liga
+
+  notification-service:
+    build: notification-service
+    ports:
+      - "8084:8084"
+    depends_on:
+      - liga-db
+      - rabbitmq
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://liga-db:5432/liga
+      - SPRING_DATASOURCE_USER=liga
+      - SPRING_DATASOURCE_PASSWORD=liga
+
+  order-service:
+    build: order-service
+    ports:
+      - "8082:8082"
+    depends_on:
+      - liga-db
+      - rabbitmq
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://liga-db:5432/liga
+      - SPRING_DATASOURCE_USER=liga
+      - SPRING_DATASOURCE_PASSWORD=liga
+
 volumes:
   rabbitmq_data:
