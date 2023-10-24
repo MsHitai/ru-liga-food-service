@@ -1,16 +1,18 @@
 package ru.liga.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class DeliveryDto {
 
     private Long orderId;
     private RestaurantDto restaurant;
     private CustomerDto customer;
-    private String payment;
+    private BigDecimal payment;
 }

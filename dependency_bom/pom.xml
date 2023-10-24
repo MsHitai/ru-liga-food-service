@@ -17,7 +17,9 @@
     <properties>
         <java.version>11</java.version>
         <spring.version>2.7.16</spring.version>
-        <mybatis.version>3.0.2</mybatis.version>
+        <mybatis.version>3.5.13</mybatis.version>
+        <mybatis.spring>2.1.1</mybatis.spring>
+        <mapper.version>3.2.0</mapper.version>
         <shakeyaml.version>2.2</shakeyaml.version>
         <h2.version>2.2.224</h2.version>
         <lombok.version>1.18.24</lombok.version>
@@ -84,7 +86,19 @@
             <dependency>
                 <groupId>org.mybatis.spring.boot</groupId>
                 <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${mybatis.spring}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis</artifactId>
                 <version>${mybatis.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.modelmapper</groupId>
+                <artifactId>modelmapper</artifactId>
+                <version>${mapper.version}</version>
             </dependency>
 
             <dependency>
