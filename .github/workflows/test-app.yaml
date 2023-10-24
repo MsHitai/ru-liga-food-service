@@ -31,8 +31,8 @@ jobs:
       - name: Liquibase Update
         uses: liquibase-github-actions/update@v4.24.0
         with:
-          changelogFile: "migration/src/main/resources/db/master.xml"
-          url: "jdbc:postgresql://localhost:5432/liga"
+          changelogFile: ""
+          url: ""
 
       - name: Check and Build application
         run: |
