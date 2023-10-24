@@ -9,7 +9,7 @@ import ru.liga.batisMapper.OrderMapper;
 import ru.liga.dto.CustomerDto;
 import ru.liga.dto.DeliveryDto;
 import ru.liga.dto.OrderActionDto;
-import ru.liga.dto.RestaurantDto;
+import ru.liga.dto.RestaurantDistanceDto;
 import ru.liga.exception.DataNotFoundException;
 import ru.liga.mapper.CustomerMapper;
 import ru.liga.mapper.RestaurantMapper;
@@ -39,6 +39,7 @@ public class DeliveryServiceImpl implements DeliveryService {
     public void addDelivery(OrderActionDto dto) {
         checkOrderId(dto.getId());
         orderMapper.updateOrderStatus(dto.getStatus(), dto.getId());
+        //todo add logic for Kitchen_Denied to return the money to the client
     }
 
     @Override
@@ -62,7 +63,7 @@ public class DeliveryServiceImpl implements DeliveryService {
             Courier courier = couriers.get(order.getId());
             Customer customer = customers.get(order.getId());
             if (courier == null) {
-                RestaurantDto restaurantDto = RestaurantMapper.mapToDto(restaurant.getAddress(), null);
+                RestaurantDistanceDto restaurantDto = RestaurantMapper.mapToDto(restaurant.getAddress(), null);
                 CustomerDto customerDto = CustomerMapper.mapToDto(customer.getAddress(), null);
                 dto.setRestaurant(restaurantDto);
                 dto.setCustomer(customerDto);
@@ -76,7 +77,7 @@ public class DeliveryServiceImpl implements DeliveryService {
                 List<Double> restaurantCoordinates = parseCoordinates(restaurant.getAddress());
                 double distanceToRestaurant = DistanceCalculator.calculateDistance(courierCoordinates,
                         restaurantCoordinates);
-                RestaurantDto restaurantDto = RestaurantMapper.mapToDto(restaurant.getAddress(), distanceToRestaurant);
+                RestaurantDistanceDto restaurantDto = RestaurantMapper.mapToDto(restaurant.getAddress(), distanceToRestaurant);
                 dto.setRestaurant(restaurantDto);
             }
             deliveries.add(dto);

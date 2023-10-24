@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 public class DeliveryDto {
 
     private Long orderId;
-    private RestaurantDto restaurant;
+    private RestaurantDistanceDto restaurant;
     private CustomerDto customer;
     private BigDecimal payment;
 }

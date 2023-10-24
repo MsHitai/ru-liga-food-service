@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class RestaurantDto {
+public class RestaurantDistanceDto {
 
     private String address;
     private Double distance;

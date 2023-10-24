@@ -1,12 +1,12 @@
 package ru.liga.mapper;
 
 import lombok.experimental.UtilityClass;
-import ru.liga.dto.RestaurantDto;
+import ru.liga.dto.RestaurantDistanceDto;
 
 @UtilityClass
 public class RestaurantMapper {
 
-    public RestaurantDto mapToDto(String address, Double distance) {
-        return new RestaurantDto(address, distance);
+    public RestaurantDistanceDto mapToDto(String address, Double distance) {
+        return new RestaurantDistanceDto(address, distance);
     }
 }
