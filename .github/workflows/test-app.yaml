@@ -40,9 +40,8 @@ jobs:
 
       - name: Check and Build application
         run: |
-          mvn checkstyle:checkstyle
           mvn install -P check --no-transfer-progress
-          docker-compose -f docker-compose.yaml build
+          docker-compose build
 
       # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
       - name: Update dependency graph

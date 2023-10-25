@@ -10,6 +10,7 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: liga
       RABBITMQ_DEFAULT_PASS: liga
+      RABBITMQ_DEFAULT_VHOST: 'vhost'
 
   liga-db:
     image: postgres:14-alpine
@@ -67,6 +68,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://liga-db:5432/liga
       - SPRING_DATASOURCE_USER=liga
       - SPRING_DATASOURCE_PASSWORD=liga
+      - delivery.service.url=http://delivery-service:8081
 
   notification-service:
     build: notification-service
@@ -76,7 +78,6 @@ services:
     depends_on:
       - liga-db
       - liquibase
-      - rabbitmq
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://liga-db:5432/liga
       - SPRING_DATASOURCE_USER=liga
@@ -90,8 +91,10 @@ services:
     depends_on:
       - liga-db
       - liquibase
-      - rabbitmq
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://liga-db:5432/liga
       - SPRING_DATASOURCE_USER=liga
       - SPRING_DATASOURCE_PASSWORD=liga
+
+volumes:
+  liquibase_data:
