@@ -29,6 +29,9 @@ public class Restaurant {
     @Column(columnDefinition = "TEXT", name = "address")
     private String address;
 
+    @Column(name = "coordinates")
+    private String coordinates;
+
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private RestaurantStatus status;

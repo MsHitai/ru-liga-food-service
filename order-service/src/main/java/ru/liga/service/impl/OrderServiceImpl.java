@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
@@ -32,8 +31,16 @@ public class OrderServiceImpl implements OrderService {
     private final RestaurantRepository restaurantRepository;
     private final RestaurantMenuItemRepository menuItemRepository;
 
-
+    /**
+     * Method returns all orders from pageIndex to pageCount
+     *
+     * @param pageIndex the offset
+     * @param pageCount the limit for a Pageable page
+     * @param status the Order status
+     * @return a List of Orders
+     */
     @Override
+    @Transactional(readOnly = true)
     public List<OrderDto> findAllOrders(Integer pageIndex, Integer pageCount, OrderStatus status) {
         Pageable page = PageRequest.of(pageIndex / pageCount, pageCount);
         List<Order> orders = orderRepository.findAllOrdersWithRestaurants(page);
@@ -51,7 +58,14 @@ public class OrderServiceImpl implements OrderService {
         return orderDtos;
     }
 
+    /**
+     * Method returns an order by its identification
+     *
+     * @param orderId identification of an order
+     * @return an order
+     */
     @Override
+    @Transactional(readOnly = true)
     public OrderDto findOrderById(Long orderId) {
         Order order = orderRepository.findByIdWithRestaurant(orderId).orElseThrow(() ->
                 new DataNotFoundException(String.format("Order by id=%d is not in the database", orderId)));
@@ -62,7 +76,15 @@ public class OrderServiceImpl implements OrderService {
         return dto;
     }
 
+    /**
+     * Method accepts a new order dto and a customer id who creates the order
+     *
+     * @param dto a NewOrderDto
+     * @param customerId an identification of a customer
+     * @return the created order
+     */
     @Override
+    @Transactional
     public OrderToDeliverDto addOrder(NewOrderDto dto, Long customerId) {
         Order order = new Order();
         Customer customer = customerRepository.findById(customerId).orElseThrow(() ->

@@ -6,11 +6,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.liga.batisMapper.OrderMapper;
-import ru.liga.dto.CustomerDto;
-import ru.liga.dto.DeliveryDto;
-import ru.liga.dto.OrderActionDto;
-import ru.liga.dto.RestaurantDistanceDto;
+import ru.liga.dto.*;
 import ru.liga.exception.DataNotFoundException;
+import ru.liga.exception.ValidationException;
 import ru.liga.mapper.CustomerMapper;
 import ru.liga.mapper.RestaurantMapper;
 import ru.liga.model.Courier;
@@ -28,21 +26,34 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class DeliveryServiceImpl implements DeliveryService {
 
     private final OrderMapper orderMapper;
     private final OrderRepository orderRepository;
 
+    /**
+     * Method accepts a status and updates an order's status found by the id from dto body
+     *
+     * @param dto OrderActionDto that has an order's id and status
+     */
     @Override
+    @Transactional
     public void addDelivery(OrderActionDto dto) {
         checkOrderId(dto.getId());
         orderMapper.updateOrderStatus(dto.getStatus(), dto.getId());
-        //todo add logic for Kitchen_Denied to return the money to the client
     }
 
+    /**
+     * Method returns all deliveries with the chosen status with the set or default limit from pageIndex to pageCount
+     *
+     * @param status an Order's status
+     * @param pageIndex an offset
+     * @param pageCount limit for a Pageable page
+     * @return a List of deliveries
+     */
     @Override
+    @Transactional(readOnly = true)
     public List<DeliveryDto> findAllDeliveries(OrderStatus status, Integer pageIndex, Integer pageCount) {
         Pageable page = PageRequest.of(pageIndex / pageCount, pageCount);
         List<Order> orders = orderMapper.getOrderByStatus(status, page.getPageSize());
@@ -68,13 +79,13 @@ public class DeliveryServiceImpl implements DeliveryService {
                 dto.setRestaurant(restaurantDto);
                 dto.setCustomer(customerDto);
             } else {
-                List<Double> courierCoordinates = parseCoordinates(courier.getCoordinates());
-                List<Double> destination = parseCoordinates(customer.getAddress());
+                DistanceDto courierCoordinates = parseCoordinates(courier.getCoordinates());
+                DistanceDto destination = parseCoordinates(customer.getCoordinates());
                 double distance = DistanceCalculator.calculateDistance(courierCoordinates, destination);
                 CustomerDto customerDto = CustomerMapper.mapToDto(customer.getAddress(), distance);
                 dto.setCustomer(customerDto);
 
-                List<Double> restaurantCoordinates = parseCoordinates(restaurant.getAddress());
+                DistanceDto restaurantCoordinates = parseCoordinates(restaurant.getCoordinates());
                 double distanceToRestaurant = DistanceCalculator.calculateDistance(courierCoordinates,
                         restaurantCoordinates);
                 RestaurantDistanceDto restaurantDto = RestaurantMapper.mapToDto(restaurant.getAddress(), distanceToRestaurant);
@@ -86,13 +97,30 @@ public class DeliveryServiceImpl implements DeliveryService {
         return deliveries;
     }
 
-    private List<Double> parseCoordinates(String coordinates) {
+    /**
+     * private Method that parses the coordinates that are written in a String and that are divided by a comma
+     *
+     * @param coordinates a set of latitude and longitude
+     * @return a DistanceDto with two fields (latitude and longitude)
+     */
+    private DistanceDto parseCoordinates(String coordinates) {
         String[] coord = coordinates.split(",");
-        double lat = Double.parseDouble(coord[0]);
-        double lon = Double.parseDouble(coord[1]);
-        return List.of(lat, lon);
+        double lat;
+        double lon;
+        try {
+            lat = Double.parseDouble(coord[0]);
+            lon = Double.parseDouble(coord[1]);
+        } catch (NumberFormatException e) {
+            throw new ValidationException("The coordinates are in the wrong format");
+        }
+        return new DistanceDto(lat, lon);
     }
 
+    /**
+     * Method checks whether a certain order exists in the database by searching it by its identification
+     *
+     * @param id order's ident
+     */
     private void checkOrderId(Long id) {
         orderRepository.findById(id).orElseThrow(() ->
                 new DataNotFoundException(String.format("Order by id=%d is not in the database", id)));

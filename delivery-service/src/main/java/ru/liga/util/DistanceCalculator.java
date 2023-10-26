@@ -1,28 +1,35 @@
 package ru.liga.util;
 
 import lombok.experimental.UtilityClass;
-
-import java.util.List;
+import ru.liga.dto.DistanceDto;
 
 @UtilityClass
 public class DistanceCalculator {
     private static final double EARTH_RADIUS = 6371; // километров
 
-    public static double calculateDistance(List<Double> couriersCoord, List<Double> destinationCoord) {
-        double lat1 = couriersCoord.get(0);
-        double lon1 = couriersCoord.get(1);
-        double lat2 = destinationCoord.get(0);
-        double lon2 = destinationCoord.get(1);
+    /**
+     * Method calculates the difference between two sets of coordinates according to Haversine formula
+     *
+     * @param couriersCoordinates the coordinates of a courier
+     * @param destinationCoordinates the coordinates of a destination
+     * @return the distance between two sets of coordinates
+     */
+    public static double calculateDistance(DistanceDto couriersCoordinates, DistanceDto destinationCoordinates) {
+        double courierLatitude = couriersCoordinates.getLatitude();
+        double courierLongitude = couriersCoordinates.getLongitude();
+        double destinationLatitude = destinationCoordinates.getLatitude();
+        double destinationLongitude = destinationCoordinates.getLongitude();
 
-        double difLat = Math.toRadians(lat2 - lat1);
-        double difLon = Math.toRadians(lon2 - lon1);
+        double differenceLatitude = Math.toRadians(destinationLatitude - courierLatitude);
+        double differenceLongitude = Math.toRadians(destinationLongitude - courierLongitude);
 
-        double a = Math.sin(difLat / 2) * Math.sin(difLat / 2) + Math.cos(Math.toRadians(lat1)) *
-                Math.cos(Math.toRadians(lat2)) * Math.sin(difLon / 2) * Math.sin(difLon / 2);
+        double squareHalfDistance = Math.sin(differenceLatitude / 2) * Math.sin(differenceLatitude / 2) +
+                Math.cos(Math.toRadians(courierLatitude)) * Math.cos(Math.toRadians(destinationLatitude)) *
+                        Math.sin(differenceLongitude / 2) * Math.sin(differenceLongitude / 2);
 
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double centralAngle = 2 * Math.atan2(Math.sqrt(squareHalfDistance), Math.sqrt(1 - squareHalfDistance));
 
-        return EARTH_RADIUS * c;
+        return EARTH_RADIUS * centralAngle;
     }
 }
 
