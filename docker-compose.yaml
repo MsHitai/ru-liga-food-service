@@ -37,6 +37,9 @@ services:
       - --url=jdbc:postgresql://liga-db:5432/liga?user=liga&password=liga
       - --changeLogFile=master.xml
       - update
+    volumes:
+      - ./migration/src/main/resources/db/master.xml:/liquibase/master.xml
+      - ./migration/src/main/resources/db/changelog:/liquibase/changelog
 
   delivery-service:
     build: delivery-service
@@ -98,3 +101,6 @@ services:
       - SPRING_DATASOURCE_USER=liga
       - SPRING_DATASOURCE_PASSWORD=liga
       - rabbit.host=rabbit
+
+volumes:
+  liquibase_data:
