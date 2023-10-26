@@ -44,7 +44,9 @@ jobs:
           docker-compose build
 
       - name: Start Docker
-        run: docker-compose -f docker-compose.yaml up -d
+        run: |
+          docker-compose -f docker-compose.yaml up --detach
+          chmod a+x .github/workflows/wait-for-it.sh
 
       - name: Run Postman tests
         run: newman run postman/Liga-Food-Service.json -r htmlextra

@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.liga.batisMapper.OrderMapper;
 import ru.liga.dto.*;
 import ru.liga.exception.DataNotFoundException;
-import ru.liga.exception.ValidationException;
 import ru.liga.mapper.CustomerMapper;
 import ru.liga.mapper.RestaurantMapper;
 import ru.liga.model.Courier;
@@ -47,7 +46,7 @@ public class DeliveryServiceImpl implements DeliveryService {
     /**
      * Method returns all deliveries with the chosen status with the set or default limit from pageIndex to pageCount
      *
-     * @param status an Order's status
+     * @param status    an Order's status
      * @param pageIndex an offset
      * @param pageCount limit for a Pageable page
      * @return a List of deliveries
@@ -111,7 +110,7 @@ public class DeliveryServiceImpl implements DeliveryService {
             lat = Double.parseDouble(coord[0]);
             lon = Double.parseDouble(coord[1]);
         } catch (NumberFormatException e) {
-            throw new ValidationException("The coordinates are in the wrong format");
+            throw new NumberFormatException("The coordinates are in the wrong format");
         }
         return new DistanceDto(lat, lon);
     }

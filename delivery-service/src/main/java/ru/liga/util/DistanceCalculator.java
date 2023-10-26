@@ -10,7 +10,7 @@ public class DistanceCalculator {
     /**
      * Method calculates the difference between two sets of coordinates according to Haversine formula
      *
-     * @param couriersCoordinates the coordinates of a courier
+     * @param couriersCoordinates    the coordinates of a courier
      * @param destinationCoordinates the coordinates of a destination
      * @return the distance between two sets of coordinates
      */

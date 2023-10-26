@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.liga.exception.DataConflictException;
 import ru.liga.exception.DataNotFoundException;
 import ru.liga.exception.DeliveryException;
-import ru.liga.exception.ValidationException;
 
 import java.time.LocalDateTime;
 
@@ -23,9 +22,9 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiError handleValidationException(final ValidationException e) {
+    public ApiError handleNumberFormatException(final NumberFormatException e) {
         log.info("400 {}", e.getMessage(), e);
-        return new ApiError("BAD_REQUEST", "Incorrectly made request", e.getMessage(), LocalDateTime.now());
+        return new ApiError("BAD_REQUEST", "Incorrect number format", e.getMessage(), LocalDateTime.now());
     }
 
     @ExceptionHandler
