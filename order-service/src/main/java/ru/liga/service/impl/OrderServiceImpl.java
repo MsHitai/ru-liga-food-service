@@ -36,7 +36,7 @@ public class OrderServiceImpl implements OrderService {
      *
      * @param pageIndex the offset
      * @param pageCount the limit for a Pageable page
-     * @param status the Order status
+     * @param status    the Order status
      * @return a List of Orders
      */
     @Override
@@ -79,7 +79,7 @@ public class OrderServiceImpl implements OrderService {
     /**
      * Method accepts a new order dto and a customer id who creates the order
      *
-     * @param dto a NewOrderDto
+     * @param dto        a NewOrderDto
      * @param customerId an identification of a customer
      * @return the created order
      */
