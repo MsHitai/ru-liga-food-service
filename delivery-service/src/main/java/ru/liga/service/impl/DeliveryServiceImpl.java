@@ -78,41 +78,23 @@ public class DeliveryServiceImpl implements DeliveryService {
                 dto.setRestaurant(restaurantDto);
                 dto.setCustomer(customerDto);
             } else {
-                DistanceDto courierCoordinates = parseCoordinates(courier.getCoordinates());
-                DistanceDto destination = parseCoordinates(customer.getCoordinates());
+                DistanceDto courierCoordinates = DistanceCalculator.parseCoordinates(courier.getCoordinates());
+                DistanceDto destination = DistanceCalculator.parseCoordinates(customer.getCoordinates());
                 double distance = DistanceCalculator.calculateDistance(courierCoordinates, destination);
                 CustomerDto customerDto = CustomerMapper.mapToDto(customer.getAddress(), distance);
                 dto.setCustomer(customerDto);
 
-                DistanceDto restaurantCoordinates = parseCoordinates(restaurant.getCoordinates());
+                DistanceDto restaurantCoordinates = DistanceCalculator.parseCoordinates(restaurant.getCoordinates());
                 double distanceToRestaurant = DistanceCalculator.calculateDistance(courierCoordinates,
                         restaurantCoordinates);
-                RestaurantDistanceDto restaurantDto = RestaurantMapper.mapToDto(restaurant.getAddress(), distanceToRestaurant);
+                RestaurantDistanceDto restaurantDto = RestaurantMapper.mapToDto(restaurant.getAddress(),
+                        distanceToRestaurant);
                 dto.setRestaurant(restaurantDto);
             }
             deliveries.add(dto);
         }
 
         return deliveries;
-    }
-
-    /**
-     * private Method that parses the coordinates that are written in a String and that are divided by a comma
-     *
-     * @param coordinates a set of latitude and longitude
-     * @return a DistanceDto with two fields (latitude and longitude)
-     */
-    private DistanceDto parseCoordinates(String coordinates) {
-        String[] coord = coordinates.split(",");
-        double lat;
-        double lon;
-        try {
-            lat = Double.parseDouble(coord[0]);
-            lon = Double.parseDouble(coord[1]);
-        } catch (NumberFormatException e) {
-            throw new NumberFormatException("The coordinates are in the wrong format");
-        }
-        return new DistanceDto(lat, lon);
     }
 
     /**
