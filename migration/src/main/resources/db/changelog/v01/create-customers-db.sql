@@ -6,6 +6,7 @@ create table if not exists customers
     phone   varchar(80),
     email   varchar(512),
     address text,
+    coordinates varchar(255),
     constraint customers_pk primary key (id)
 );
 

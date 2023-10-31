@@ -7,8 +7,7 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-    volumes:
-      - rabbitmq_data:/var/lib/rabbitmq
+    hostname: rabbit
     environment:
       RABBITMQ_DEFAULT_USER: liga
       RABBITMQ_DEFAULT_PASS: liga
@@ -22,6 +21,86 @@ services:
       - POSTGRES_DB=liga
       - POSTGRES_USER=liga
       - POSTGRES_PASSWORD=liga
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U liga"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  liquibase:
+    image: liquibase/liquibase:4.19.1
+    container_name: liquibase
+    depends_on:
+      liga-db:
+        condition: service_healthy
+    command:
+      - --url=jdbc:postgresql://liga-db:5432/liga?user=liga&password=liga
+      - --changeLogFile=master.xml
+      - update
+    volumes:
+      - ./migration/src/main/resources/db/master.xml:/liquibase/master.xml
+      - ./migration/src/main/resources/db/changelog:/liquibase/changelog
+
+  delivery-service:
+    build: delivery-service
+    container_name: delivery-service
+    ports:
+      - "8081:8081"
+    depends_on:
+      kitchen-service:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://liga-db:5432/liga
+      - SPRING_DATASOURCE_USER=liga
+      - SPRING_DATASOURCE_PASSWORD=liga
+      - rabbit.host=rabbit
+
+  kitchen-service:
+    build: kitchen-service
+    container_name: kitchen-service
+    ports:
+      - "8083:8083"
+    depends_on:
+       liquibase:
+         condition: service_completed_successfully
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://liga-db:5432/liga
+      - SPRING_DATASOURCE_USER=liga
+      - SPRING_DATASOURCE_PASSWORD=liga
+      - delivery.service.url=http://delivery-service:8081
+      - rabbit.host=rabbit
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8083/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  notification-service:
+    build: notification-service
+    container_name: notification-service
+    ports:
+      - "8084:8084"
+    depends_on:
+      liquibase:
+        condition: service_completed_successfully
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://liga-db:5432/liga
+      - SPRING_DATASOURCE_USER=liga
+      - SPRING_DATASOURCE_PASSWORD=liga
+
+  order-service:
+    build: order-service
+    container_name: order-service
+    ports:
+      - "8082:8082"
+    depends_on:
+      liquibase:
+        condition: service_completed_successfully
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://liga-db:5432/liga
+      - SPRING_DATASOURCE_USER=liga
+      - SPRING_DATASOURCE_PASSWORD=liga
+      - rabbit.host=rabbit
 
 volumes:
-  rabbitmq_data:
+  liquibase_data:

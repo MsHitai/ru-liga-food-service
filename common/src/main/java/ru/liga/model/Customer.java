@@ -29,6 +29,9 @@ public class Customer {
     @Column(columnDefinition = "TEXT", name = "address")
     private String address;
 
+    @Column(name = "coordinates")
+    private String coordinates;
+
     @OneToOne(fetch = FetchType.LAZY)
     @Transient
     @ToString.Exclude

@@ -312,7 +312,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8083/kitchen/finish/4?queue=courier.pick",
+					"raw": "http://localhost:8083/kitchen/finish/4?routingKey=courier.pick",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -325,7 +325,7 @@
 					],
 					"query": [
 						{
-							"key": "queue",
+							"key": "routingKey",
 							"value": "courier.pick"
 						}
 					]
