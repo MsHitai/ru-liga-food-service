@@ -7,4 +7,5 @@
     <include file="changelog/v01.xml" relativeToChangelogFile="true"/>
     <include file="changelog/v02.xml" relativeToChangelogFile="true"/>
     <include file="changelog/v03.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/v04.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

@@ -1,0 +1,1 @@
+DELETE FROM authorities WHERE id = 1 or id = 2;

@@ -18,11 +18,17 @@ public class RabbitConfig {
     @Value("${rabbit.host}")
     private String host;
 
+    @Value("${spring.datasource.username}")
+    private String username;
+
+    @Value("${spring.datasource.password}")
+    private String password;
+
     @Bean
     public ConnectionFactory connectionFactory() {
         CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(host);
-        cachingConnectionFactory.setUsername("liga");
-        cachingConnectionFactory.setPassword("liga");
+        cachingConnectionFactory.setUsername(username);
+        cachingConnectionFactory.setPassword(password);
         return cachingConnectionFactory;
     }
 

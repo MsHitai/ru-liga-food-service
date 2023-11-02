@@ -81,8 +81,8 @@ services:
     ports:
       - "8084:8084"
     depends_on:
-      liquibase:
-        condition: service_completed_successfully
+      kitchen-service:
+        condition: service_healthy
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://liga-db:5432/liga
       - SPRING_DATASOURCE_USER=liga

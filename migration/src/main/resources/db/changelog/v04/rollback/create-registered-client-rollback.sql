@@ -1,0 +1,1 @@
+DROP TABLE oauth2_registered_client;
