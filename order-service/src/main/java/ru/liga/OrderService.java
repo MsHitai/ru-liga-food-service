@@ -11,7 +11,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@OpenAPIDefinition(servers = {@Server(url = "https://localhost:8080")},
+@OpenAPIDefinition(servers = {@Server(url = "http://127.0.0.1:8080")},
         info = @Info(title = "Order Service API", description = "This lists all the Order Service API Calls. " +
                 "The Calls are OAuth2 secured, so please use your client ID and Secret to test them out.",
                 version = "v1.0"))
