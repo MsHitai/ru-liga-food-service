@@ -42,7 +42,7 @@ services:
       - ./migration/src/main/resources/db/changelog:/liquibase/changelog
 
   delivery-service:
-    build: delivery-service
+    build: ../delivery-service
     container_name: delivery-service
     ports:
       - "8081:8081"
@@ -56,7 +56,7 @@ services:
       - rabbit.host=rabbit
 
   kitchen-service:
-    build: kitchen-service
+    build: ../kitchen-service
     container_name: kitchen-service
     ports:
       - "8083:8083"
@@ -76,7 +76,7 @@ services:
       retries: 3
 
   notification-service:
-    build: notification-service
+    build: ../notification-service
     container_name: notification-service
     ports:
       - "8084:8084"
@@ -89,7 +89,7 @@ services:
       - SPRING_DATASOURCE_PASSWORD=liga
 
   order-service:
-    build: order-service
+    build: ../order-service
     container_name: order-service
     ports:
       - "8082:8082"

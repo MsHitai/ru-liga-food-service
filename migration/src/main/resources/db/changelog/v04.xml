@@ -5,34 +5,20 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
     <!-- локальный ченджлог  -->
     <changeSet id="2023-10-29 11:00:00" author="trushanina">
-        <sqlFile path="v04/create-auth-users.sql" relativeToChangelogFile="true"/>
+        <sqlFile path="v04/create-users.sql" relativeToChangelogFile="true"/>
         <rollback>
-            <sqlFile path="v04/rollback/create-auth-users-rollback.sql" relativeToChangelogFile="true"/>
+            <sqlFile path="v04/rollback/create-users-rollback.sql" relativeToChangelogFile="true"/>
         </rollback>
     </changeSet>
 
     <changeSet id="2023-10-29 12:00:00" author="trushanina">
-        <sqlFile path="v04/create-auth-authorities.sql" relativeToChangelogFile="true"/>
+        <sqlFile path="v04/create-authorities.sql" relativeToChangelogFile="true"/>
         <rollback>
-            <sqlFile path="v04/rollback/create-auth-authorities-rollback.sql" relativeToChangelogFile="true"/>
+            <sqlFile path="v04/rollback/create-authorities-rollback.sql" relativeToChangelogFile="true"/>
         </rollback>
     </changeSet>
 
     <changeSet id="2023-10-29 13:00:00" author="trushanina">
-        <sqlFile path="v04/create-users-authorities.sql" relativeToChangelogFile="true"/>
-        <rollback>
-            <sqlFile path="v04/rollback/create-users-authorities-rollback.sql" relativeToChangelogFile="true"/>
-        </rollback>
-    </changeSet>
-
-    <changeSet id="2023-10-29 14:00:00" author="trushanina">
-        <sqlFile path="v04/insert-auth-authorities.sql" relativeToChangelogFile="true"/>
-        <rollback>
-            <sqlFile path="v04/rollback/insert-auth-authorities-rollback.sql" relativeToChangelogFile="true"/>
-        </rollback>
-    </changeSet>
-
-    <changeSet id="2023-10-29 15:00:00" author="trushanina">
         <sqlFile path="v04/create-registered-client.sql" relativeToChangelogFile="true"/>
         <rollback>
             <sqlFile path="v04/rollback/create-registered-client-rollback.sql" relativeToChangelogFile="true"/>

@@ -43,7 +43,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional(readOnly = true)
     public List<OrderDto> findAllOrders(Integer pageIndex, Integer pageCount, OrderStatus status) {
         Pageable page = PageRequest.of(pageIndex / pageCount, pageCount);
-        List<Order> orders = orderRepository.findAllOrdersWithRestaurants(page);
+        List<Order> orders = orderRepository.findAllOrdersWithRestaurants(page, status);
         List<OrderDto> orderDtos = orders.stream()
                 .map(order -> OrderMapper.mapToDto(order, RestaurantMapper.mapToDto(order.getRestaurant().getName())))
                 .collect(Collectors.toList());

@@ -41,3 +41,13 @@ spring:
         provider:
           spring:
             issuer-uri: http://localhost:9000
+
+springdoc:
+  swagger-ui:
+    urls:
+      - name: Order Service API
+        url: /orders/v3/api-docs
+      - name: Delivery Service API
+        url: /deliveries/v3/api-docs
+      - name: Kitchen Service API
+        url: /kitchen/v3/api-docs
