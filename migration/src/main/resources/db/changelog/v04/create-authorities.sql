@@ -3,6 +3,7 @@ create table if not exists authorities
     username  varchar(50) not null
         references users,
     authority varchar(50) not null
+        primary key
 );
 
 comment on table authorities is 'Таблица прав пользователей (роли)';

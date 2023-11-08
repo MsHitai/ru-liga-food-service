@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.liga.dto.NewOrderDto;
 import ru.liga.dto.OrderActionDto;
@@ -51,7 +52,7 @@ public class OrderController {
     @Operation(summary = "Добавить новый заказ, необходимо указать id клиента",
             security = @SecurityRequirement(name = "security_auth"))
     @PostMapping
-    // todo add @PreAuthorize(hasRole('CUSTOMER'))
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     public OrderToDeliverDto addOrder(@Valid @RequestBody NewOrderDto dto,
                                       @RequestParam(name = "customerId") Long customerId) {
         log.info("Received POST request to add an order {} from customer by id {}", dto.toString(), customerId);
@@ -60,6 +61,7 @@ public class OrderController {
 
     @Operation(summary = "Обновить статус заказа, id заказа и статус приходят в теле запроса")
     @PutMapping("/{orderId}")
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     public void updateOrderStatus(@Valid @RequestBody OrderActionDto dto,
                                   @PathVariable(name = "orderId") UUID orderId) {
         log.info("Received POST request to update order by id {} with action {}", orderId, dto.getStatus());
@@ -69,4 +71,3 @@ public class OrderController {
         orderService.updateOrderStatus(dto, orderId);
     }
 }
-// todo correct README add postman collection

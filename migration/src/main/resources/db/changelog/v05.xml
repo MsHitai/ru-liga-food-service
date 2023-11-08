@@ -10,4 +10,12 @@
             <sqlFile path="v05/rollback/insert-orders-rollback.sql" relativeToChangelogFile="true"/>
         </rollback>
     </changeSet>
+
+    <changeSet id="2023-11-08 11:00:00" author="trushanina">
+        <sqlFile path="v05/insert-test-users.sql" relativeToChangelogFile="true"/>
+        <rollback>
+            <sqlFile path="v05/rollback/insert-test-users-rollback.sql" relativeToChangelogFile="true"/>
+        </rollback>
+    </changeSet>
+
 </databaseChangeLog>
