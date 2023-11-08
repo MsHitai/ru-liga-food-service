@@ -123,9 +123,9 @@ public class OrderServiceImpl implements OrderService {
         result.setId(order.getId());
         result.setEstimatedArrival(LocalDateTime.now().plusHours(1));
 
-        OrderRestaurant orderRestaurant = new OrderRestaurant(order.getId(), dto.getRestaurantId(), dto.getMenuItems());
+        OrderRestaurantDto orderRestaurantDto = new OrderRestaurantDto(order.getId(), dto.getRestaurantId(), dto.getMenuItems());
 
-        rabbitTemplate.convertAndSend("directExchange", "kitchen.cook", orderRestaurant);
+        rabbitTemplate.convertAndSend("directExchange", "kitchen.cook", orderRestaurantDto);
 
         return result;
     }
@@ -143,7 +143,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
-     * Method checks the different variations of the order statuses and doesn't allow updating to any status at will
+     * Method checks the order statuses and doesn't allow updating to any status at will
      *
      * @param order          to save in the repository
      * @param statusToUpdate is the status to which the order's status is to be updated
@@ -152,42 +152,18 @@ public class OrderServiceImpl implements OrderService {
         if (order.getStatus().equals(statusToUpdate)) {
             throw new OrderStatusException("The order already has this status - " + statusToUpdate);
         }
-        switch (order.getStatus()) {
-            case CUSTOMER_CREATED:
-                if (statusToUpdate.equals(OrderStatus.CUSTOMER_PAID) ||
-                        statusToUpdate.equals(OrderStatus.CUSTOMER_CANCELLED)) {
-                    orderRepository.updateOrderStatus(statusToUpdate, order.getId());
-                }
-                break;
-            case KITCHEN_PREPARING:
-                if (statusToUpdate.equals(OrderStatus.DELIVERY_PENDING)) {
-                    orderRepository.updateOrderStatus(statusToUpdate, order.getId());
-                }
-                break;
-            case DELIVERY_PENDING:
-                if (statusToUpdate.equals(OrderStatus.DELIVERY_PICKING) ||
-                        statusToUpdate.equals(OrderStatus.DELIVERY_DENIED)) {
-                    orderRepository.updateOrderStatus(statusToUpdate, order.getId());
-                }
-                break;
-            case DELIVERY_DENIED:
-                if (statusToUpdate.equals(OrderStatus.DELIVERY_REFUNDED)) {
-                    orderRepository.updateOrderStatus(statusToUpdate, order.getId());
-                }
-                break;
-            case DELIVERY_PICKING:
-                if (statusToUpdate.equals(OrderStatus.DELIVERY_DELIVERING) ||
-                        statusToUpdate.equals(OrderStatus.DELIVERY_COMPLETE)) {
-                    orderRepository.updateOrderStatus(statusToUpdate, order.getId());
-                }
-                break;
+        if (order.getStatus() == OrderStatus.CUSTOMER_CREATED) {
+            if (statusToUpdate.equals(OrderStatus.CUSTOMER_PAID) ||
+                    statusToUpdate.equals(OrderStatus.CUSTOMER_CANCELLED)) {
+                orderRepository.updateOrderStatus(statusToUpdate, order.getId());
+            }
         }
     }
 
     /**
      * Method checks whether a certain order exists in the database by searching it by its identification
      *
-     * @param id order's ident
+     * @param id order's identification
      */
     private Order checkOrderId(UUID id) {
         return orderRepository.findById(id).orElseThrow(() ->

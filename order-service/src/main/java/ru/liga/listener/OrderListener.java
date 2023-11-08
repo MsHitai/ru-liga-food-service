@@ -64,6 +64,28 @@ public class OrderListener {
                     updateStatus(statusToChange, order);
                 }
                 break;
+            case KITCHEN_PREPARING:
+                if (statusToChange.equals(OrderStatus.DELIVERY_PENDING)) {
+                    orderRepository.updateOrderStatus(statusToChange, order.getId());
+                }
+                break;
+            case DELIVERY_PENDING:
+                if (statusToChange.equals(OrderStatus.DELIVERY_PICKING) ||
+                        statusToChange.equals(OrderStatus.DELIVERY_DENIED)) {
+                    updateStatus(statusToChange, order);
+                }
+                break;
+            case DELIVERY_DENIED:
+                if (statusToChange.equals(OrderStatus.DELIVERY_REFUNDED)) {
+                    updateStatus(statusToChange, order);
+                }
+                break;
+            case DELIVERY_PICKING:
+                if (statusToChange.equals(OrderStatus.DELIVERY_DELIVERING) ||
+                        statusToChange.equals(OrderStatus.DELIVERY_COMPLETE)) {
+                    updateStatus(statusToChange, order);
+                }
+                break;
         }
 
     }
@@ -79,6 +101,6 @@ public class OrderListener {
         order.setStatus(statusToChange);
         orderRepository.save(order);
         rabbitTemplate.convertAndSend("directExchange", "status.update",
-                "status updated");
+                "status updated to " + statusToChange);
     }
 }

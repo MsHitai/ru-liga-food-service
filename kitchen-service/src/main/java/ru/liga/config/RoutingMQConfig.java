@@ -17,13 +17,15 @@ public class RoutingMQConfig {
         Queue thirdQueue = new Queue("order", false);
         Queue fourthQueue = new Queue("kitchen1", false);
         Queue fifthQueue = new Queue("kitchen2", false);
+        Queue sixthQueue = new Queue("customer", false);
         DirectExchange directExchange = new DirectExchange("directExchange");
 
-        return new Declarables(firstQueue, secondQueue, thirdQueue, fourthQueue, fifthQueue, directExchange,
+        return new Declarables(firstQueue, secondQueue, thirdQueue, fourthQueue, fifthQueue, sixthQueue, directExchange,
                 BindingBuilder.bind(firstQueue).to(directExchange).with("courier.pick"),
                 BindingBuilder.bind(secondQueue).to(directExchange).with("courier.find"),
                 BindingBuilder.bind(thirdQueue).to(directExchange).with("order.status"),
                 BindingBuilder.bind(fourthQueue).to(directExchange).with("kitchen.cook"),
-                BindingBuilder.bind(fifthQueue).to(directExchange).with("status.update"));
+                BindingBuilder.bind(fifthQueue).to(directExchange).with("status.update"),
+                BindingBuilder.bind(sixthQueue).to(directExchange).with("customer.deliver"));
     }
 }

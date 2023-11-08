@@ -1,14 +1,12 @@
 package ru.liga.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.liga.dto.CustomerDto;
-import ru.liga.dto.DeliveryDto;
-import ru.liga.dto.DistanceDto;
-import ru.liga.dto.RestaurantDistanceDto;
+import ru.liga.dto.*;
 import ru.liga.mapper.CustomerMapper;
 import ru.liga.mapper.RestaurantMapper;
 import ru.liga.model.Courier;
@@ -31,6 +29,7 @@ import java.util.stream.Collectors;
 public class DeliveryServiceImpl implements DeliveryService {
 
     private final OrderRepository orderRepository;
+    private final RabbitTemplate rabbitTemplate;
 
     /**
      * Method returns all deliveries with the chosen status with the set or default limit from pageIndex to pageCount
@@ -86,14 +85,40 @@ public class DeliveryServiceImpl implements DeliveryService {
         return deliveries;
     }
 
+    /**
+     * Method accepts the delivery and sends messages to change the order's status and to notification service
+     *
+     * @param orderId    the id of the order
+     * @param customerId the id of a courier
+     */
     @Override
-    public void takeOrderForDelivery(UUID orderId, Long courierId) {
-
+    public void takeOrderForDelivery(UUID orderId, Long customerId) {
+        OrderActionDto dto = new OrderActionDto(orderId, OrderStatus.DELIVERY_PICKING);
+        // так как нет промежуточного эндпоинта отправляется два сообщения со сменой на два статуса подряд
+        OrderActionDto dto2 = new OrderActionDto(orderId, OrderStatus.DELIVERY_DELIVERING);
+        String routingKey = "order.status";
+        rabbitTemplate.convertAndSend("directExchange", routingKey, dto);
+        rabbitTemplate.convertAndSend("directExchange", routingKey, dto2);
+        // также два подряд сообщения, так как нет промежуточного эндпоинта
+        CustomerDeliveryDto customerDeliveryDto = new CustomerDeliveryDto(customerId, dto.getStatus());
+        CustomerDeliveryDto customerDeliveryDto2 = new CustomerDeliveryDto(customerId, dto2.getStatus());
+        rabbitTemplate.convertAndSend("directExchange", "customer.deliver", customerDeliveryDto);
+        rabbitTemplate.convertAndSend("directExchange", "customer.deliver", customerDeliveryDto2);
     }
 
+    /**
+     * Method completes the delivery and sends a message to change the order's status and to notification service
+     *
+     * @param orderId    the id of the order
+     * @param customerId the id of a courier
+     */
     @Override
-    public void completeDelivery(UUID orderId, Long courierId) {
-
+    public void completeDelivery(UUID orderId, Long customerId) {
+        OrderActionDto dto = new OrderActionDto(orderId, OrderStatus.DELIVERY_COMPLETE);
+        String routingKey = "order.status";
+        rabbitTemplate.convertAndSend("directExchange", routingKey, dto);
+        CustomerDeliveryDto customerDeliveryDto = new CustomerDeliveryDto(customerId, dto.getStatus());
+        rabbitTemplate.convertAndSend("directExchange", "customer.deliver", customerDeliveryDto);
     }
 
 }

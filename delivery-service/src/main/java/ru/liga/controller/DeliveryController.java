@@ -36,16 +36,16 @@ public class DeliveryController {
 
     @PostMapping("/{orderId}/take")
     public void takeOrderForDelivery(@PathVariable UUID orderId,
-                                     @RequestParam(name = "courierId") Long courierId) {
-        log.info("Received POST request to take order by id {} for delivery from courier by id {}", orderId, courierId);
-        deliveryService.takeOrderForDelivery(orderId, courierId);
+                                     @RequestParam(name = "customerId") Long customerId) {
+        log.info("Received POST request to take order by id {} for delivery to customer by id {}", orderId, customerId);
+        deliveryService.takeOrderForDelivery(orderId, customerId);
     }
 
     @PostMapping("/{orderId}/complete")
     public void completeDelivery(@PathVariable UUID orderId,
-                                 @RequestParam(name = "courierId") Long courierId) {
-        log.info("Received POST request to complete order by id {} for delivery from courier by id {}",
-                orderId, courierId);
-        deliveryService.completeDelivery(orderId, courierId);
+                                 @RequestParam(name = "customerId") Long customerId) {
+        log.info("Received POST request to complete order by id {} for delivery to customer by id {}",
+                orderId, customerId);
+        deliveryService.completeDelivery(orderId, customerId);
     }
 }
