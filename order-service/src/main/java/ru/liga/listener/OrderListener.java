@@ -48,7 +48,8 @@ public class OrderListener {
     private void checkStatus(OrderStatus statusToChange, Order order) {
         switch (order.getStatus()) {
             case CUSTOMER_PAID:
-                if (statusToChange.equals(OrderStatus.KITCHEN_ACCEPTED)) {
+                if (statusToChange.equals(OrderStatus.KITCHEN_ACCEPTED) ||
+                        statusToChange.equals(OrderStatus.KITCHEN_PREPARING)) {
                     updateStatus(statusToChange, order);
                 } else if (statusToChange.equals(OrderStatus.KITCHEN_DENIED)) {
                     updateStatus(statusToChange, order);
@@ -66,7 +67,7 @@ public class OrderListener {
                 break;
             case KITCHEN_PREPARING:
                 if (statusToChange.equals(OrderStatus.DELIVERY_PENDING)) {
-                    orderRepository.updateOrderStatus(statusToChange, order.getId());
+                    updateStatus(statusToChange, order);
                 }
                 break;
             case DELIVERY_PENDING:
@@ -86,6 +87,14 @@ public class OrderListener {
                     updateStatus(statusToChange, order);
                 }
                 break;
+            case DELIVERY_DELIVERING:
+                if (statusToChange.equals(OrderStatus.DELIVERY_COMPLETE)) {
+                    updateStatus(statusToChange, order);
+                }
+                break;
+            default:
+                throw new OrderStatusException(String.format("There is something wrong with the order status. It is" +
+                        " %s and the status to update is %s", order.getStatus(), statusToChange));
         }
 
     }

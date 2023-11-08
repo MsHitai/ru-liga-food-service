@@ -25,6 +25,9 @@ public class KitchenServiceImpl implements KitchenService {
         OrderActionDto dto = new OrderActionDto(orderId, OrderStatus.KITCHEN_ACCEPTED);
         String routingKey = "order.status";
         rabbitTemplate.convertAndSend("directExchange", routingKey, dto);
+        // отправляем здесь повторно, пока нет промежуточного эндпоинта "начать готовить"
+        OrderActionDto dto2 = new OrderActionDto(orderId, OrderStatus.KITCHEN_PREPARING);
+        rabbitTemplate.convertAndSend("directExchange", routingKey, dto2);
     }
 
     /**
