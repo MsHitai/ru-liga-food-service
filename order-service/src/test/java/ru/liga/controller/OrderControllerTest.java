@@ -17,6 +17,7 @@ import ru.liga.dto.*;
 import ru.liga.exception.DataNotFoundException;
 import ru.liga.model.enums.OrderStatus;
 import ru.liga.service.OrderService;
+import ru.liga.util.JwtTokenUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -48,6 +49,9 @@ class OrderControllerTest {
 
     @MockBean
     private OrderService orderService;
+
+    @MockBean
+    private JwtTokenUtils jwtTokenUtils;
 
     private OrderDto dto;
 
