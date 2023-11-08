@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.liga.exception.DataConflictException;
 import ru.liga.exception.DataNotFoundException;
 import ru.liga.exception.DeliveryException;
+import ru.liga.exception.OrderStatusException;
 
 import java.time.LocalDateTime;
 
@@ -32,6 +33,14 @@ public class ErrorHandler {
     public ApiError handleDeliveryException(final DeliveryException e) {
         log.info("400 {}", e.getMessage(), e);
         return new ApiError("BAD_REQUEST", "Problem with delivery", e.getMessage(), LocalDateTime.now());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiError handleOrderStatusException(final OrderStatusException e) {
+        log.info("400 {}", e.getMessage(), e);
+        return new ApiError("BAD_REQUEST", "Problem with updating order status", e.getMessage(),
+                LocalDateTime.now());
     }
 
     @ExceptionHandler

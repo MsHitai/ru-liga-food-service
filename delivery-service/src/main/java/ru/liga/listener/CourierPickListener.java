@@ -1,7 +1,5 @@
-package ru.liga.service.impl;
+package ru.liga.listener;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -20,24 +18,28 @@ import ru.liga.util.DistanceCalculator;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class QueueListener {
+public class CourierPickListener {
 
     private final CourierRepository courierRepository;
     private final OrderRepository orderRepository;
     private final RabbitTemplate rabbitTemplate;
 
+    /**
+     * Method searches available couriers in the database
+     *
+     * @param orderId identification of the finished order
+     */
     @RabbitListener(queues = "courier1")
-    public void findCouriers(String message) throws JsonProcessingException {
-        log.info("Looking for a courier for order by id " + message);
-        ObjectMapper objectMapper = new ObjectMapper();
-        Long orderId = objectMapper.readValue(message, Long.class);
+    public void findCouriers(UUID orderId) {
+        log.info("Looking for a courier for order by id " + orderId);
         Order order = orderRepository.findByIdWithCustomer(orderId).orElseThrow(() ->
-                new DataNotFoundException(String.format("Order by id=%d is not in the database", orderId)));
+                new DataNotFoundException(String.format("Order by id=%s is not in the database", orderId)));
         if (order.getCourier() != null) {
             rabbitTemplate.convertAndSend("directExchange", "courier.find",
                     order.getCourier().getId());
@@ -47,6 +49,13 @@ public class QueueListener {
         orderRepository.save(order);
     }
 
+    /**
+     * Method checks if there are couriers with the status 'INACTIVE' and then uses DistanceCalculator to find the
+     * closest courier to the customer's coordinates, although the distance between the restaurant and the
+     * position of the courier is not evaluated
+     *
+     * @param order has the connection to the customer, whose coordinates are used to find the closest courier
+     */
     private void lookForCouriers(Order order) {
         List<Courier> couriers = courierRepository.findAllByStatus(CourierStatus.INACTIVE);
         if (!couriers.isEmpty()) {

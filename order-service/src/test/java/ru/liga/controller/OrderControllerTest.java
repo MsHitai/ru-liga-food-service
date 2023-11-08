@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -112,7 +113,7 @@ class OrderControllerTest {
 
     @Test
     void testFindOrderById_404WhenWrongId() throws Exception {
-        Long wrongId = -22L;
+        UUID wrongId = UUID.fromString("5e28273748");
         when(orderService.findOrderById(wrongId))
                 .thenThrow(DataNotFoundException.class);
 

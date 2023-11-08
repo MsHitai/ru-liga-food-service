@@ -15,3 +15,4 @@ comment on column customers.id is 'Идентификатор';
 comment on column customers.phone is 'Номер телефона';
 comment on column customers.email is 'Электронная почта';
 comment on column customers.address is 'Адрес';
+comment on column customers.coordinates is 'Координаты';

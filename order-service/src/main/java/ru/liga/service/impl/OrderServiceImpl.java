@@ -1,12 +1,14 @@
 package ru.liga.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.liga.dto.*;
 import ru.liga.exception.DataNotFoundException;
+import ru.liga.exception.OrderStatusException;
 import ru.liga.mapper.MenuItemMapper;
 import ru.liga.mapper.OrderMapper;
 import ru.liga.mapper.RestaurantMapper;
@@ -19,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,6 +33,7 @@ public class OrderServiceImpl implements OrderService {
     private final CustomerRepository customerRepository;
     private final RestaurantRepository restaurantRepository;
     private final RestaurantMenuItemRepository menuItemRepository;
+    private final RabbitTemplate rabbitTemplate;
 
     /**
      * Method returns all orders from pageIndex to pageCount
@@ -49,7 +53,7 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toList());
 
         List<OrderItem> orderItems = orderItemRepository.findAllOrderItems(page);
-        Map<Long, List<ItemDto>> itemDtos = orderItems.stream()
+        Map<UUID, List<ItemDto>> itemDtos = orderItems.stream()
                 .collect(Collectors.groupingBy(orderItem -> orderItem.getOrder().getId(),
                         Collectors.mapping(item -> MenuItemMapper.mapToDto(item.getMenuItem(), item.getQuantity()),
                                 Collectors.toList())));
@@ -66,11 +70,11 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     @Transactional(readOnly = true)
-    public OrderDto findOrderById(Long orderId) {
+    public OrderDto findOrderById(UUID orderId) {
         Order order = orderRepository.findByIdWithRestaurant(orderId).orElseThrow(() ->
-                new DataNotFoundException(String.format("Order by id=%d is not in the database", orderId)));
+                new DataNotFoundException(String.format("Order by id=%s is not in the database", orderId)));
         OrderItem orderItem = orderItemRepository.findByIdWithItem(orderId).orElseThrow(() ->
-                new DataNotFoundException(String.format("OrderItem by id=%d is not in the database", orderId)));
+                new DataNotFoundException(String.format("OrderItem by id=%s is not in the database", orderId)));
         OrderDto dto = OrderMapper.mapToDto(order, RestaurantMapper.mapToDto(order.getRestaurant().getName()));
         dto.setItems(List.of(MenuItemMapper.mapToDto(orderItem.getMenuItem(), orderItem.getQuantity())));
         return dto;
@@ -78,6 +82,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * Method accepts a new order dto and a customer id who creates the order
+     * creates the order and sends to 'kitchen' queue that a new order is available
      *
      * @param dto        a NewOrderDto
      * @param customerId an identification of a customer
@@ -116,9 +121,77 @@ public class OrderServiceImpl implements OrderService {
 
         OrderToDeliverDto result = new OrderToDeliverDto();
         result.setId(order.getId());
-        result.setEstimatedArrival(LocalDateTime.now().plusDays(3));
+        result.setEstimatedArrival(LocalDateTime.now().plusHours(1));
+
+        OrderRestaurant orderRestaurant = new OrderRestaurant(order.getId(), dto.getRestaurantId(), dto.getMenuItems());
+
+        rabbitTemplate.convertAndSend("directExchange", "kitchen.cook", orderRestaurant);
 
         return result;
+    }
+
+    /**
+     * Method accepts a status and updates an order's status found by the id from dto body
+     *
+     * @param dto OrderActionDto that has an order's id and status
+     */
+    @Override
+    @Transactional
+    public void updateOrderStatus(OrderActionDto dto, UUID orderId) {
+        Order order = checkOrderId(dto.getId());
+        checkStatus(order, dto.getStatus());
+    }
+
+    /**
+     * Method checks the different variations of the order statuses and doesn't allow updating to any status at will
+     *
+     * @param order          to save in the repository
+     * @param statusToUpdate is the status to which the order's status is to be updated
+     */
+    private void checkStatus(Order order, OrderStatus statusToUpdate) {
+        if (order.getStatus().equals(statusToUpdate)) {
+            throw new OrderStatusException("The order already has this status - " + statusToUpdate);
+        }
+        switch (order.getStatus()) {
+            case CUSTOMER_CREATED:
+                if (statusToUpdate.equals(OrderStatus.CUSTOMER_PAID) ||
+                        statusToUpdate.equals(OrderStatus.CUSTOMER_CANCELLED)) {
+                    orderRepository.updateOrderStatus(statusToUpdate, order.getId());
+                }
+                break;
+            case KITCHEN_PREPARING:
+                if (statusToUpdate.equals(OrderStatus.DELIVERY_PENDING)) {
+                    orderRepository.updateOrderStatus(statusToUpdate, order.getId());
+                }
+                break;
+            case DELIVERY_PENDING:
+                if (statusToUpdate.equals(OrderStatus.DELIVERY_PICKING) ||
+                        statusToUpdate.equals(OrderStatus.DELIVERY_DENIED)) {
+                    orderRepository.updateOrderStatus(statusToUpdate, order.getId());
+                }
+                break;
+            case DELIVERY_DENIED:
+                if (statusToUpdate.equals(OrderStatus.DELIVERY_REFUNDED)) {
+                    orderRepository.updateOrderStatus(statusToUpdate, order.getId());
+                }
+                break;
+            case DELIVERY_PICKING:
+                if (statusToUpdate.equals(OrderStatus.DELIVERY_DELIVERING) ||
+                        statusToUpdate.equals(OrderStatus.DELIVERY_COMPLETE)) {
+                    orderRepository.updateOrderStatus(statusToUpdate, order.getId());
+                }
+                break;
+        }
+    }
+
+    /**
+     * Method checks whether a certain order exists in the database by searching it by its identification
+     *
+     * @param id order's ident
+     */
+    private Order checkOrderId(UUID id) {
+        return orderRepository.findById(id).orElseThrow(() ->
+                new DataNotFoundException(String.format("Order by id=%s is not in the database", id)));
     }
 
 }

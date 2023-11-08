@@ -1,7 +1,5 @@
-package ru.liga.service;
+package ru.liga.listener;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -17,10 +15,13 @@ public class CourierFindListener {
 
     private final CourierRepository courierRepository;
 
+    /**
+     * Method notifies courier by id (currently only imitates)
+     *
+     * @param courierId identification of the closest available courier
+     */
     @RabbitListener(queues = "courier2")
-    public void notifyCouriers(String message) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        Long courierId = objectMapper.readValue(message, Long.class);
+    public void notifyCouriers(Long courierId) {
         Courier courier = courierRepository.findById(courierId).orElseThrow(() ->
                 new DataNotFoundException(String.format("Courier by id=%d is not in the database", courierId)));
         log.info("Sending an SMS to the courier by id " + courier.getId());

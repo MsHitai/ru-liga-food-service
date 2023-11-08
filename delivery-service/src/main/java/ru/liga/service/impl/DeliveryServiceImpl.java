@@ -5,9 +5,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.liga.batisMapper.OrderMapper;
-import ru.liga.dto.*;
-import ru.liga.exception.DataNotFoundException;
+import ru.liga.dto.CustomerDto;
+import ru.liga.dto.DeliveryDto;
+import ru.liga.dto.DistanceDto;
+import ru.liga.dto.RestaurantDistanceDto;
 import ru.liga.mapper.CustomerMapper;
 import ru.liga.mapper.RestaurantMapper;
 import ru.liga.model.Courier;
@@ -22,26 +23,14 @@ import ru.liga.util.DistanceCalculator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class DeliveryServiceImpl implements DeliveryService {
 
-    private final OrderMapper orderMapper;
     private final OrderRepository orderRepository;
-
-    /**
-     * Method accepts a status and updates an order's status found by the id from dto body
-     *
-     * @param dto OrderActionDto that has an order's id and status
-     */
-    @Override
-    @Transactional
-    public void addDelivery(OrderActionDto dto) {
-        checkOrderId(dto.getId());
-        orderMapper.updateOrderStatus(dto.getStatus(), dto.getId());
-    }
 
     /**
      * Method returns all deliveries with the chosen status with the set or default limit from pageIndex to pageCount
@@ -55,13 +44,13 @@ public class DeliveryServiceImpl implements DeliveryService {
     @Transactional(readOnly = true)
     public List<DeliveryDto> findAllDeliveries(OrderStatus status, Integer pageIndex, Integer pageCount) {
         Pageable page = PageRequest.of(pageIndex / pageCount, pageCount);
-        List<Order> orders = orderMapper.getOrderByStatus(status, page.getPageSize());
+        List<Order> orders = orderRepository.findAllByStatus(status, page);
         // собираем рестораны, клиентов и курьеров из заказов по идентификатору заказа
-        Map<Long, Restaurant> restaurants = orders.stream()
+        Map<UUID, Restaurant> restaurants = orders.stream()
                 .collect(Collectors.toMap(Order::getId, Order::getRestaurant));
-        Map<Long, Customer> customers = orders.stream()
+        Map<UUID, Customer> customers = orders.stream()
                 .collect(Collectors.toMap(Order::getId, Order::getCustomer));
-        Map<Long, Courier> couriers = orders.stream()
+        Map<UUID, Courier> couriers = orders.stream()
                 .collect(Collectors.toMap(Order::getId, Order::getCourier));
 
         List<DeliveryDto> deliveries = new ArrayList<>();
@@ -97,13 +86,14 @@ public class DeliveryServiceImpl implements DeliveryService {
         return deliveries;
     }
 
-    /**
-     * Method checks whether a certain order exists in the database by searching it by its identification
-     *
-     * @param id order's ident
-     */
-    private void checkOrderId(Long id) {
-        orderRepository.findById(id).orElseThrow(() ->
-                new DataNotFoundException(String.format("Order by id=%d is not in the database", id)));
+    @Override
+    public void takeOrderForDelivery(UUID orderId, Long courierId) {
+
     }
+
+    @Override
+    public void completeDelivery(UUID orderId, Long courierId) {
+
+    }
+
 }

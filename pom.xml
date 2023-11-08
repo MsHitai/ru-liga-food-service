@@ -24,8 +24,6 @@
 		<module>notification-service</module>
         <module>migration</module>
         <module>common</module>
-        <module>cloud-gateway</module>
-        <module>auth-service</module>
     </modules>
 
 	<build>

@@ -38,8 +38,8 @@ services:
       - --changeLogFile=master.xml
       - update
     volumes:
-      - ./migration/src/main/resources/db/master.xml:/liquibase/master.xml
-      - ./migration/src/main/resources/db/changelog:/liquibase/changelog
+      - ../migration/src/main/resources/db/master.xml:/liquibase/master.xml
+      - ../migration/src/main/resources/db/changelog:/liquibase/changelog
 
   delivery-service:
     build: ../delivery-service
@@ -67,7 +67,6 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://liga-db:5432/liga
       - SPRING_DATASOURCE_USER=liga
       - SPRING_DATASOURCE_PASSWORD=liga
-      - delivery.service.url=http://delivery-service:8081
       - rabbit.host=rabbit
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8083/actuator/health"]
@@ -94,8 +93,8 @@ services:
     ports:
       - "8082:8082"
     depends_on:
-      liquibase:
-        condition: service_completed_successfully
+      kitchen-service:
+        condition: service_healthy
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://liga-db:5432/liga
       - SPRING_DATASOURCE_USER=liga

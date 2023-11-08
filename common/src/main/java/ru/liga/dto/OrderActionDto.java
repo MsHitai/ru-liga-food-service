@@ -5,12 +5,14 @@ import lombok.Data;
 import ru.liga.model.enums.OrderStatus;
 
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-public class OrderActionDto {
+public class OrderActionDto implements Serializable {
     @NotNull
-    private Long id;
+    private UUID id;
     @NotNull
     private OrderStatus status;
 }

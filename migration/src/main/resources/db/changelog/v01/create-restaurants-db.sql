@@ -13,3 +13,4 @@ comment on table restaurants is 'Таблица ресторанов';
 comment on column restaurants.id is 'Идентификатор';
 comment on column restaurants.address is 'Адрес';
 comment on column restaurants.status is 'Статус';
+comment on column restaurants.coordinates is 'Координаты';

@@ -8,6 +8,7 @@ import ru.liga.model.OrderItem;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
@@ -15,6 +16,6 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
     @Query("select oi from OrderItem oi left join fetch oi.order left join fetch oi.menuItem")
     List<OrderItem> findAllOrderItems(Pageable page);
 
-    @Query("select oi from OrderItem oi left join fetch oi.order left join fetch oi.menuItem where oi.id = :id")
-    Optional<OrderItem> findByIdWithItem(Long id);
+    @Query("select oi from OrderItem oi left join fetch oi.order left join fetch oi.menuItem where oi.order.id = :id")
+    Optional<OrderItem> findByIdWithItem(UUID id);
 }

@@ -13,6 +13,7 @@ public class OrderMapper {
                 .id(order.getId())
                 .restaurant(restaurantDto)
                 .timestamp(order.getTimestamp())
+                .status(order.getStatus())
                 .build();
     }
 }
